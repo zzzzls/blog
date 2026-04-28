@@ -2,7 +2,7 @@
 created: 2026-03-30 01:08:43
 modified: 2026-03-31 00:34:38
 tags: []
-title: 分别解决什么问题?
+title: Linter 和 Formatter
 publish: true
 ---
 

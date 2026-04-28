@@ -148,10 +148,10 @@ document.addEventListener("nav", async () => {
   const nodes = center.querySelectorAll("code.mermaid") as NodeListOf<HTMLElement>
   if (nodes.length === 0) return
 
-  mermaidImport ||= await import(
-    // @ts-ignore
-    "https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs"
-  )
+  // Use a variable so esbuild treats this as a runtime import (not bundled).
+  const mermaidUrl = "/static/mermaid/mermaid.esm.min.mjs"
+  // @ts-ignore
+  mermaidImport ||= await import(mermaidUrl)
   const mermaid = mermaidImport.default
 
   const textMapping: WeakMap<HTMLElement, string> = new WeakMap()

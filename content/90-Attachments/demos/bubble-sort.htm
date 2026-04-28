@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>冒泡排序可视化</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #2b2b2b;
+    --muted: #666;
+    --border: #d4d4d4;
+    --btn-bg: #ffffff;
+    --btn-hover: #eee;
+    --bar-idle: #6b9abc;
+    --bar-compare: #f4a261;
+    --bar-sorted: #86b388;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161618;
+      --fg: #ebebec;
+      --muted: #b8b8b8;
+      --border: #393639;
+      --btn-bg: #1f1f21;
+      --btn-hover: #2a2a2d;
+    }
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .demo {
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  button {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: var(--btn-bg);
+    color: var(--fg);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  button:hover:not(:disabled) {
+    background: var(--btn-hover);
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .speed {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .status {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    min-height: 1.2em;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+<div class="demo">
+  <div class="controls">
+    <button id="start">开始</button>
+    <button id="reset">重置</button>
+    <label class="speed">
+      速度
+      <input type="range" id="speed" min="50" max="800" value="300" step="50" />
+      <span id="speed-val">300ms</span>
+    </label>
+  </div>
+  <svg id="viz" viewBox="0 0 600 240" preserveAspectRatio="xMidYMid meet"></svg>
+  <div class="status" id="status">点击「开始」演示排序</div>
+</div>
+<script type="module">
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
+
+const svg = d3.select("#viz")
+const width = 600, height = 240, padding = 8
+const N = 12
+let arr = []
+let running = false
+let cancelled = false
+let speed = 300
+
+const colorIdle = "#6b9abc"
+const colorCompare = "#f4a261"
+const colorSorted = "#86b388"
+
+function generate() {
+  arr = d3.range(N).map(() => Math.floor(Math.random() * 90) + 10)
+  cancelled = true
+  render(new Set(), -1, -1)
+  setStatus("点击「开始」演示排序")
+}
+
+function setStatus(text) {
+  document.getElementById("status").textContent = text
+}
+
+function render(sortedSet, i, j) {
+  const barW = (width - padding * 2) / N
+  const x = d3.scaleLinear().domain([0, N]).range([padding, width - padding])
+  const y = d3.scaleLinear().domain([0, 100]).range([height - 20, 10])
+
+  const bars = svg.selectAll("rect").data(arr, (d, k) => k)
+  bars.enter().append("rect")
+    .attr("width", barW - 2)
+    .merge(bars)
+    .transition().duration(speed * 0.6)
+    .attr("x", (_, k) => x(k))
+    .attr("y", d => y(d))
+    .attr("height", d => height - 20 - y(d))
+    .attr("fill", (_, k) =>
+      sortedSet.has(k) ? colorSorted : (k === i || k === j) ? colorCompare : colorIdle
+    )
+
+  const labels = svg.selectAll("text").data(arr, (d, k) => k)
+  labels.enter().append("text")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "11px")
+    .attr("fill", "currentColor")
+    .merge(labels)
+    .transition().duration(speed * 0.6)
+    .attr("x", (_, k) => x(k) + barW / 2 - 1)
+    .attr("y", height - 6)
+    .text(d => d)
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+async function bubbleSort() {
+  running = true
+  cancelled = false
+  const sorted = new Set()
+  for (let pass = 0; pass < arr.length - 1; pass++) {
+    for (let k = 0; k < arr.length - 1 - pass; k++) {
+      if (cancelled) { running = false; return }
+      render(sorted, k, k + 1)
+      setStatus(`比较 a[${k}]=${arr[k]} 与 a[${k + 1}]=${arr[k + 1]}`)
+      await sleep(speed)
+      if (arr[k] > arr[k + 1]) {
+        ;[arr[k], arr[k + 1]] = [arr[k + 1], arr[k]]
+        render(sorted, k, k + 1)
+        await sleep(speed * 0.4)
+      }
+    }
+    sorted.add(arr.length - 1 - pass)
+  }
+  sorted.add(0)
+  render(sorted, -1, -1)
+  setStatus("✅ 排序完成")
+  running = false
+}
+
+document.getElementById("start").onclick = () => {
+  if (running) return
+  bubbleSort()
+}
+document.getElementById("reset").onclick = () => {
+  cancelled = true
+  generate()
+}
+const speedInput = document.getElementById("speed")
+const speedVal = document.getElementById("speed-val")
+speedInput.oninput = e => {
+  speed = +e.target.value
+  speedVal.textContent = `${speed}ms`
+}
+
+generate()
+</script>
+</body>
+</html>

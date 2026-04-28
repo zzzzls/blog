@@ -8,6 +8,7 @@ const mermaidChunksOut = join(mermaidOut, "chunks", "mermaid.esm.min")
 const mermaidSrc = join(root, "node_modules", "mermaid", "dist")
 
 await cp(join(root, "cloudflare", "robots.txt"), join(publicDir, "robots.txt"))
+await cp(join(root, "cloudflare", "_headers"), join(publicDir, "_headers"))
 
 await mkdir(mermaidChunksOut, { recursive: true })
 await cp(

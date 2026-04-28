@@ -270,12 +270,19 @@ export const ComponentResources: QuartzEmitterPlugin = () => {
       } else if (cfg.theme.fontOrigin === "googleFonts" && !cfg.theme.cdnCaching) {
         // when cdnCaching is true, we link to google fonts in Head.tsx
         const theme = ctx.cfg.configuration.theme
-        const response = await fetch(googleFontHref(theme))
+        // Modern browser UA so Google Fonts returns woff2 (not the ttf fallback).
+        const fontHeaders = {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        }
+        const response = await fetch(googleFontHref(theme), { headers: fontHeaders })
         googleFontsStyleSheet = await response.text()
 
         if (theme.typography.title) {
           const title = ctx.cfg.configuration.pageTitle
-          const response = await fetch(googleFontSubsetHref(theme, title))
+          const response = await fetch(googleFontSubsetHref(theme, title), {
+            headers: fontHeaders,
+          })
           googleFontsStyleSheet += `\n${await response.text()}`
         }
 
@@ -293,7 +300,7 @@ export const ComponentResources: QuartzEmitterPlugin = () => {
 
         // Download and save font files
         for (const fontFile of fontFiles) {
-          const res = await fetch(fontFile.url)
+          const res = await fetch(fontFile.url, { headers: fontHeaders })
           if (!res.ok) {
             throw new Error(`Failed to fetch font ${fontFile.filename}`)
           }

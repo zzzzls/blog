@@ -16,7 +16,7 @@ const config: QuartzConfig = {
       provider: "plausible",
     },
     locale: "zh-CN",
-    baseUrl: "your-domain.pages.dev",
+    baseUrl: "blog.bi1vox.site",
     ignorePatterns: ["**/.DS_Store", ".git/**", "node_modules/**"],
     defaultDateType: "modified",
     theme: {

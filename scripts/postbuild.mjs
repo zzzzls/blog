@@ -1,4 +1,4 @@
-import { cp, mkdir } from "node:fs/promises"
+import { appendFile, cp, mkdir, readFile } from "node:fs/promises"
 import { join } from "node:path"
 
 const root = process.cwd()
@@ -20,4 +20,28 @@ await cp(join(mermaidSrc, "chunks", "mermaid.esm.min"), mermaidChunksOut, {
   filter: (src) => !src.endsWith(".map"),
 })
 
-console.log("postbuild: robots.txt + mermaid assets copied to public/")
+// 本地化 LXGW WenKai Screen（仅 GB 子集，~4.3MB / 194 切片，覆盖 GB18030 常用汉字）
+const lxgwSrc = join(root, "node_modules", "lxgw-wenkai-screen-webfont")
+const lxgwDest = join(publicDir, "static", "fonts", "lxgw-wenkai-screen")
+const lxgwCssName = "lxgwwenkaigbscreen.css"
+
+await mkdir(join(lxgwDest, "files"), { recursive: true })
+await cp(join(lxgwSrc, "files"), join(lxgwDest, "files"), {
+  recursive: true,
+  filter: (src) =>
+    !src.endsWith(".woff2") || src.includes("lxgwwenkaigbscreen-subset-"),
+})
+
+const lxgwCss = await readFile(join(lxgwSrc, lxgwCssName), "utf-8")
+const lxgwCssRewritten = lxgwCss.replace(
+  /url\((['"]?)\.\/files\//g,
+  `url($1/static/fonts/lxgw-wenkai-screen/files/`,
+)
+await appendFile(
+  join(publicDir, "index.css"),
+  `\n/* LXGW WenKai Screen (local, GB subset) */\n${lxgwCssRewritten}\n`,
+)
+
+console.log(
+  "postbuild: robots.txt + mermaid + LXGW WenKai Screen assets copied to public/",
+)

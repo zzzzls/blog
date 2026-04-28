@@ -1,3 +1,15 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// 字体策略：英文/代码 = JetBrains Mono；中文 = LXGW WenKai Screen（本地化）
+// JetBrains Mono：通过 quartz.config.ts 的 fontOrigin=googleFonts 自动本地化到 /static/fonts/
+// LXGW WenKai Screen：scripts/postbuild.mjs 复制 lxgw-wenkai-screen-webfont GB 子集并把 @font-face 追加到 index.css
+//
+// 用 html:root[...] 提升特异性 (0,1,2)，覆盖 quartz/util/theme.ts 在 :root 中生成的默认变量
+html:root,
+html:root[saved-theme="light"],
+html:root[saved-theme="dark"] {
+  --titleFont: "JetBrains Mono", "LXGW WenKai Screen", system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --headerFont: "JetBrains Mono", "LXGW WenKai Screen", system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --bodyFont: "JetBrains Mono", "LXGW WenKai Screen", system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --codeFont: "JetBrains Mono", "LXGW WenKai Screen", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}

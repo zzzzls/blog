@@ -94,6 +94,16 @@ wsl -l -v
 
 下面假设要迁的旧发行版叫 `Ubuntu` (从微软商店装的默认就是这个名字), 想把新位置放在 `D:\WSL\Ubuntu-22.04`, 顺便把名字也改成 `Ubuntu-22.04`.
 
+> 💡 **开始前: 备份 `/etc/wsl.conf`**
+>
+> `wsl --export` / `--import` 只搬运根文件系统(tar 包里就是 rootfs), 不携带 wsl.conf 的配置语义—— 新导入的发行版里这个文件会是空的或回到默认状态. 如果原来的 wsl.conf 除了 `[user]` 还有 `[boot] systemd=true`、`[network] generateResolvConf=false`、自定义挂载选项等, 全都得手动写回. 进新发行版前先把它备份出来:
+>
+> ```bash
+> cp /etc/wsl.conf /mnt/d/backup/wsl.conf.bak
+> ```
+>
+> 类似地, 如果你改过 `/etc/fstab`、`/etc/hosts` 之类的系统文件, 一并备份一份会省事很多.
+
 ### 1. 关闭 WSL
 
 ```bash
@@ -128,7 +138,7 @@ wsl --set-default Ubuntu-22.04
 
 ## 进入新发行版后: 修复默认用户
 
-新导入的发行版默认登入的是 root. 乍一看以为系统错乱了, 其实是正常的—— `wsl --import` 不会保留原来的 `/etc/wsl.conf` 默认用户配置, 得手动写回:
+新导入的发行版默认登入的是 root. 乍一看以为系统错乱了, 其实是正常的—— `wsl --import` 不会保留原来的 `/etc/wsl.conf` 默认用户配置, 得参考[开始前备份的 wsl.conf](#迁移步骤) 重新写回. 最少要补回的是 `[user]`:
 
 ```bash
 vim /etc/wsl.conf

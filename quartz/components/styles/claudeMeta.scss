@@ -1,0 +1,15 @@
+.claude-meta {
+  margin-top: 0;
+  color: var(--darkgray);
+  font-size: 0.9em;
+
+  .claude-version {
+    font-family: var(--codeFont);
+    color: var(--secondary);
+  }
+
+  .claude-category {
+    font-family: var(--codeFont);
+    color: var(--tertiary);
+  }
+}

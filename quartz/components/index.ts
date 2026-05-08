@@ -8,6 +8,7 @@ import ReaderMode from "./ReaderMode"
 import Head from "./Head"
 import PageTitle from "./PageTitle"
 import ContentMeta from "./ContentMeta"
+import ClaudeMeta from "./ClaudeMeta"
 import Spacer from "./Spacer"
 import TableOfContents from "./TableOfContents"
 import Explorer from "./Explorer"
@@ -34,6 +35,7 @@ export {
   Head,
   PageTitle,
   ContentMeta,
+  ClaudeMeta,
   Spacer,
   TableOfContents,
   Explorer,

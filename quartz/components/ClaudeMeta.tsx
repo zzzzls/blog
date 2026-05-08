@@ -12,6 +12,7 @@ function ClaudeMeta({ fileData, displayClass }: QuartzComponentProps) {
 
   return (
     <p class={classNames(displayClass, "claude-meta")}>
+      <span class="claude-meta-label">claude version:</span>{" "}
       <span class="claude-version">{version}</span>
       {category && <span class="claude-meta-sep"> · </span>}
       {category && <span class="claude-category">#{category}</span>}

@@ -1,0 +1,33 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+
+# Build output（CF Pages 在线构建产物，本地预览时也会生成）
+public/
+
+# Quartz 增量构建缓存
+quartz/.quartz-cache/
+
+# TypeScript 增量编译信息
+tsconfig.tsbuildinfo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 环境变量（防御性预留，目前未使用）
+.env
+.env.local
+.env.*.local
+
+# 0x profile（package.json 里 profile 脚本的输出）
+*.0x/

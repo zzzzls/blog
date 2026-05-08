@@ -36,6 +36,7 @@ zzzzls。
 
 - [clash-mihomo](/10-Notes/系列/clash-mihomo/) · [python 工具链](/10-Notes/系列/python工具链/) · [cs144 计网](/10-Notes/系列/cs144计网/)
 - [AI 工作流（极客时间）](/10-Notes/系列/AI工作流-极客时间/) · [solidworks](/10-Notes/系列/solidworks/) · [rabbitmq](/10-Notes/系列/rabbitmq/)
+- [claude-tips](/10-Notes/系列/claude-tips/) · (Claude / Claude Code 使用技巧)
 
 **零散笔记**
 

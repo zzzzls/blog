@@ -33,6 +33,8 @@ publish: true
 
 # NAT 原理
 
+![NAT 工作原理:多台内网设备通过同一公网 IP 与外网通信](../../../90-Attachments/images/nat-principle.png)
+
 假设你家里有两台电脑: `192.168.1.10` 和 `192.168.1.11`, 它们想访问公网服务器 `8.8.8.8`, 数据包可能长这样:
 
 ```plaintext

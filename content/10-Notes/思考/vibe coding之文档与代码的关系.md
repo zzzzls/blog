@@ -1,6 +1,6 @@
 ---
 created: 2026-05-14 01:15:24
-modified: 2026-05-14 01:27:53
+modified: 2026-05-14 01:39:17
 publish: true
 tags: [思考]
 title: vibe coding之文档与代码的关系

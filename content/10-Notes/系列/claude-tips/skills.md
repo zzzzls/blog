@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-05-20 00:47:35
-modified: 2026-05-20 02:21:55
+modified: 2026-05-20 02:22:39
 publish: true
 tags: [claude]
 title: skills
@@ -167,9 +167,7 @@ git status --short
 > 示例: 使用 Explore subagent 的 skill
 
 ```
-
 ---
-
 name: deep-research
 description: Research a topic thoroughly
 context: fork
@@ -183,5 +181,3 @@ agent: Explore
 3.结合具体的文件总结调查结果
 
 ```
-
-## 为什么需要 skills

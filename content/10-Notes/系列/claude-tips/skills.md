@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-05-20 00:47:35
-modified: 2026-05-20 02:18:38
+modified: 2026-05-20 02:21:55
 publish: true
 tags: [claude]
 title: skills
@@ -158,10 +158,7 @@ Summarize this pull request...
 node --version
 npm --version
 git status --short
- ```
-
 ```
-
 
 ## 在 subagent 中运行 skill
 

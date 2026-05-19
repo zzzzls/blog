@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-05-20 00:47:35
-modified: 2026-05-20 02:01:45
+modified: 2026-05-20 02:18:38
 publish: true
 tags: [claude]
 title: skills
@@ -158,7 +158,10 @@ Summarize this pull request...
 node --version
 npm --version
 git status --short
+ ```
+
 ```
+
 
 ## 在 subagent 中运行 skill
 
@@ -167,7 +170,9 @@ git status --short
 > 示例: 使用 Explore subagent 的 skill
 
 ```
+
 ---
+
 name: deep-research
 description: Research a topic thoroughly
 context: fork
@@ -176,9 +181,10 @@ agent: Explore
 
 深度分析 $ARGUMENTS
 
-1.使用 Glob 和 Grep 查找相关文件
-2.阅读并分析代码
+1.使用 Glob 和 Grep 查找相关文件  
+2.阅读并分析代码  
 3.结合具体的文件总结调查结果
+
 ```
 
 ## 为什么需要 skills

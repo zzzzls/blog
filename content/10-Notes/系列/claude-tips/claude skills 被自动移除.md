@@ -1,9 +1,9 @@
 ---
 created: 2026-05-09 00:03:55
-modified: 2026-05-09 00:29:12
-tags: [claude]
-title: claude skills descriptions dropped
+modified: 2026-05-21 00:48:23
 publish: true
+tags: [claude]
+title: claude skills 被自动移除
 ---
 
 ## 现象

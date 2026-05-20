@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-05-20 00:47:35
-modified: 2026-05-20 02:22:39
+modified: 2026-05-21 00:49:12
 publish: true
 tags: [claude]
 title: skills
@@ -181,3 +181,7 @@ agent: Explore
 3.结合具体的文件总结调查结果
 
 ```
+
+## skill 描述被截断
+
+[claude skills 被自动移除](claude%20skills%20被自动移除.md)

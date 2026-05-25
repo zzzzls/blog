@@ -2,9 +2,9 @@
 category: hooks
 claude_version: 2.1.133
 created: 2026-05-25 08:39:01
-modified: 2026-05-26 01:49:06
+modified: 2026-05-26 02:13:52
 publish: true
-tags: [claude, meta, 工具]
+tags: [工具, claude, meta]
 title: hooks
 ---
 
@@ -74,7 +74,7 @@ Claude 准备结束
 
 ## Hooks 生命周期
 
-![](10-Notes/系列/claude-tips/assets/hooks/file-20260526005119556.png)
+![Hooks 三层生命周期](../../../90-Attachments/images/hooks-lifecycle.png)
 
 
 整体可分为三层生命周期:

@@ -1,5 +1,11 @@
 let isReaderMode = false
 
+function shouldEnableReaderModeByDefault(slug?: string) {
+  if (!slug || slug === "index" || slug === "404") return false
+  if (slug.startsWith("tags/") || slug.endsWith("/index")) return false
+  return true
+}
+
 const emitReaderModeChangeEvent = (mode: "on" | "off") => {
   const event: CustomEventMap["readermodechange"] = new CustomEvent("readermodechange", {
     detail: { mode },
@@ -8,11 +14,17 @@ const emitReaderModeChangeEvent = (mode: "on" | "off") => {
 }
 
 document.addEventListener("nav", () => {
-  const switchReaderMode = () => {
-    isReaderMode = !isReaderMode
+  const applyReaderMode = () => {
     const newMode = isReaderMode ? "on" : "off"
     document.documentElement.setAttribute("reader-mode", newMode)
     emitReaderModeChangeEvent(newMode)
+  }
+
+  isReaderMode = shouldEnableReaderModeByDefault(document.body.dataset.slug)
+
+  const switchReaderMode = () => {
+    isReaderMode = !isReaderMode
+    applyReaderMode()
   }
 
   for (const readerModeButton of document.getElementsByClassName("readermode")) {
@@ -21,5 +33,5 @@ document.addEventListener("nav", () => {
   }
 
   // Set initial state
-  document.documentElement.setAttribute("reader-mode", isReaderMode ? "on" : "off")
+  applyReaderMode()
 })

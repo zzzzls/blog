@@ -17,6 +17,10 @@ const mermaidSrc = join(root, "node_modules", "mermaid", "dist")
 
 await cp(join(root, "cloudflare", "robots.txt"), join(publicDir, "robots.txt"))
 await cp(join(root, "cloudflare", "_headers"), join(publicDir, "_headers"))
+await cp(
+  join(root, "cloudflare", "googlea0f17ebe777367d0.html"),
+  join(publicDir, "googlea0f17ebe777367d0.html"),
+)
 
 await mkdir(mermaidChunksOut, { recursive: true })
 await cp(

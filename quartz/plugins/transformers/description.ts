@@ -10,8 +10,8 @@ export interface Options {
 }
 
 const defaultOptions: Options = {
-  descriptionLength: 150,
-  maxDescriptionLength: 180,
+  descriptionLength: 120,
+  maxDescriptionLength: 155,
   replaceExternalLinks: true,
 }
 
@@ -23,11 +23,12 @@ const urlRegex = new RegExp(
 function truncateDescription(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
 
-  const sliced = text.slice(0, maxLength).trimEnd()
-  return sliced.replace(/[，。；、,.!?;:：\s]+$/, "") + "..."
+  const ellipsis = "..."
+  const sliced = text.slice(0, maxLength - ellipsis.length).trimEnd()
+  return sliced.replace(/[，。；、,.!?;:：\s]+$/, "") + ellipsis
 }
 
-function buildDescription(text: string, opts: Options): string {
+export function buildDescription(text: string, opts: Options): string {
   const cleaned = text
     .replace(/\s+/g, " ")
     .replace(/^(?:\d+[\.)]|[-*•])\s+/, "")

@@ -24,6 +24,21 @@ function getIsoDate(value: unknown): string | undefined {
   return value instanceof Date ? value.toISOString() : undefined
 }
 
+export function getSeoTitle(
+  cfg: Pick<QuartzComponentProps["cfg"], "locale" | "pageTitle" | "pageTitleSuffix">,
+  fileData: Pick<QuartzComponentProps["fileData"], "frontmatter" | "slug">,
+): string {
+  const titleSuffix = cfg.pageTitleSuffix ?? ""
+  const frontmatterTitle = fileData.frontmatter?.title
+  const isHomeIndexTitle = fileData.slug === "index" && frontmatterTitle === "index"
+  const title =
+    isHomeIndexTitle
+      ? `${cfg.pageTitle} | 技术笔记与思考`
+      : (frontmatterTitle ?? i18n(cfg.locale).propertyDefaults.title)
+
+  return title + titleSuffix
+}
+
 function getStructuredData({
   cfg,
   fileData,
@@ -98,9 +113,7 @@ export default (() => {
     externalResources,
     ctx,
   }: QuartzComponentProps) => {
-    const titleSuffix = cfg.pageTitleSuffix ?? ""
-    const title =
-      (fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title) + titleSuffix
+    const title = getSeoTitle(cfg, fileData)
     const description =
       fileData.frontmatter?.socialDescription ??
       fileData.frontmatter?.description ??

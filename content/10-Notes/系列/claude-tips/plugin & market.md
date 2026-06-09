@@ -2,10 +2,10 @@
 category:
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-10 01:52:33
+modified: 2026-06-10 02:36:35
 publish: true
 tags: [claude]
-title: plugin
+title: plugin & market
 ---
 
 Claude Code 的能力通常来自于:
@@ -21,20 +21,6 @@ Claude Code 的能力通常来自于:
 | settings.json | 默认行为配置                  |
 
 plugin 用于将上述内容打包到一起, 便于安装, 共享, 版本控制和分发
-
-# 独立 .claude 目录
-
-对于个人工作流, 快速实验, 单项目定制等场景, 无需使用 plugin, 可通过项目中创建 .claude 方式来添加自定义 skill, agents 和 hooks, 一个结构如下:
-
-```
-<project>
-.claude
-	skills
-		xxx
-	agents
-		xxx
-	settings.json
-```
 
 # plugin
 
@@ -189,9 +175,9 @@ skill内容, agent内容, hook命令, mongitor命令 以及 MCP 或 LCP Server �
 
 - `claude plugin list [options]`: 列出已安装的 plugin
 
-# 快速开始
+## 快速开始
 
-## 创建第一个插件
+### 创建第一个插件
 
 1. 创建插件目录: `mkdir my-first-plugin`
 2. 创建插件清单: `my-first-plugin/.claude-plugin/plugin.json`
@@ -226,7 +212,7 @@ skill内容, agent内容, hook命令, mongitor命令 以及 MCP 或 LCP Server �
 	- 运行 claude 以加载插件: `claude --plugin-dir ./my-first-plugin`
 	- 尝试执行 skill: `/my-first-plugin:hello zzzzls`
 
-## 本地测试你的插件
+### 本地测试你的插件
 
 使用 `--plugin-dir / --plugin-url` 在开发期间测试插件
 - 这会直接加载你的插件, 无需安装
@@ -328,7 +314,7 @@ plugin marketplace 本质是一个插件目录: 它告诉 Claude Code "有哪些
 | 字段             | 必填  | 类型             | 说明                                                                                         |
 | -------------- | --- | -------------- | ------------------------------------------------------------------------------------------ |
 | name           | ✔   | string         | plugin标识符(全小写, `-`连接), 作为安装名:`/plugin install my-plugin@marketplace`                       |
-| source         | ✔   | string\|object | 从哪里获取 plugin, 见 [plugin 源](#plugin%20源)                                                    |
+| source         | ✔   | string\|object | 从哪里获取 plugin, 见 [plugin 源](plugin%20&%20market.md#plugin%20源)                                                    |
 | displayName    |     | string         | UI中显示的人类可读名称                                                                               |
 | description    |     | string         | 简短的 plugin 描述                                                                              |
 | version        |     | string         | Plugin 版本。如果设置（在此处或在 `plugin.json` 中），plugin 将固定到此字符串，用户仅在其更改时才会收到更新。省略以回退到 git commit SHA |
@@ -443,7 +429,75 @@ Github 提供最简单的分发方法:
 
 ### 分发前本地测试
 
-```
+```bash
+claude plugin validate .   # 验证 marketplace JSON 语法
 /plugin marketplace add ./my-local-marketplace
 /plugin install test-plugin@my-local-marketplace
 ```
+
+### 版本解析机制
+
+claude code 会按如下优先级解析 plugin 的版本:
+1. plugin 的 `plugin.json` 中的 `version`
+2. plugin 的 marketplace 条目中的 `version`
+3. plugin 源的 git 提交 SHA
+
+对于 git 源类型 `github`、`url`、`git-subdir` 和 git 托管 marketplace 内的相对路径，你可以完全省略 `version`，每个新提交都被视为新版本
+
+设置 `version` 会固定 plugin, 如果你推送新提交而不修改该字符串, 则 `/plugin update` 和自动更新会跳过该 plugin
+
+### 为容器预填充plugins
+
+对于容器镜像和 CI 环境, 你可以在构建时预填充 plugins 目录,无需在运行时克隆任何内容。
+
+构建镜像时先安装 marketplace 和 plugin, 然后把 `/opt/claude-seed` 拷到镜像中，并设置 `CLAUDE_CODE_PLUGIN_SEED_DIR`. Claude Code 启动时会读取 seed 中的 marketplace 和 plugin cache
+
+**构建阶段:**
+
+```bash
+CLAUDE_CODE_PLUGIN_CACHE_DIR=/opt/claude-seed \
+  claude plugin marketplace add your-org/claude-plugins
+
+CLAUDE_CODE_PLUGIN_CACHE_DIR=/opt/claude-seed \
+  claude plugin install repo-onboarding@company-tools
+```
+
+**运行阶段:**
+
+```bash
+export CLAUDE_CODE_PLUGIN_SEED_DIR=/opt/claude-seed
+claude
+```
+
+默认行为:
+- **只读**: 种子目录永远不会被写入, 因此种子 marketplace 的自动更新被禁用
+- **种子条目优先**: 每次启动时, 种子中声明的 marketplaces 会覆盖用户配置中的任何匹配条目
+- **阻止变更**: 针对种子管理的 marketplace 运行 `/plugin marketplace remove` 或 `/plugin marketplace update` 会失败，并提示你要求管理员更新种子镜像
+
+## CLI 命令
+
+- `claude plugin marketplace add <source> [options]`: 从 GitHub 存储库、git URL、远程 URL 或本地路径添加 marketplace
+- `claude plugin marketplace list [options]`: 列出所有配置的 marketplaces。
+- `claude plugin marketplace remove <name> [options]`: 删除配置的 marketplace
+- `claude plugin marketplace update [name]`: 从其源刷新 marketplaces
+
+```bash
+
+claude plugin marketplace add acme-corp/claude-plugins
+
+claude plugin marketplace add https://gitlab.example.com/team/plugins.git
+
+claude plugin marketplace add https://example.com/marketplace.json
+
+claude plugin marketplace add ./my-marketplace
+
+claude plugin marketplace add acme-corp/claude-plugins --scope project
+
+```
+
+# 参考
+
+- [Plugins 参考](https://code.claude.com/docs/zh-CN/plugins-reference)
+- [创建 plugins](https://code.claude.com/docs/zh-CN/plugins)
+- [discover-plugins](https://code.claude.com/docs/zh-CN/discover-plugins)
+- [plugin-marketplaces](https://code.claude.com/docs/zh-CN/plugin-marketplaces)

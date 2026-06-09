@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-10 00:38:27
+modified: 2026-06-10 01:08:36
 publish: true
 tags: [claude]
 title: plugin
@@ -242,6 +242,63 @@ claude --plugin-dir ./plugin-one --plugin-dir ./plugin-two
 # 支持zip压缩包
 claude --plugin-dir ./my-first-plugin.zip   
 
-# 加载远程url插件
-
+# 加载url插件
+claude --plugin-url https://example.com/my-plugin.zip --plugin-url https://example.com/other.zip
 ```
+
+# 插件市场 (plugin marketplace)
+
+安装一个公开的插件步骤如下:
+
+1. 添加插件所属的市场(*类似一个软件源*): `/plugin marketplace add anthropics/skills`
+2. 从该市场中安装插件: `/plugin install {插件名}@{市场名}`
+
+plugin marketplace 本质是一个插件目录: 它告诉 Claude Code "有哪些 plugin、叫什么、从哪里拉取、版本是什么、元数据是什么"
+
+为了将我们的插件分发给别人, 我们首先需要创建一个 marketplace
+
+## 创建 marketplace
+
+> 一个 marketplace 本质是一个 json 文件
+
+在根目录中创建 `.claude-plugin/marketplace.json`, 此文件定义你的 marketplace 的名称, 所有者信息, 以及包含的 plugin 列表
+
+```json
+{
+  "name": "company-tools",
+  "owner": {
+    "name": "DevTools Team",
+    "email": "devtools@example.com"
+  },
+  "plugins": [
+    {
+      "name": "code-formatter",
+      "source": "./plugins/formatter",
+      "description": "Automatic code formatting on save",
+      "version": "2.1.0",
+      "author": {
+        "name": "DevTools Team"
+      }
+    },
+    {
+      "name": "deployment-tools",
+      "source": {
+        "source": "github",
+        "repo": "company/deploy-plugin"
+      },
+      "description": "Deployment automation tools"
+    }
+  ]
+}
+```
+
+## marketplace 结构
+
+必需字段:
+
+| 字段      | 类型     | 说明                              |
+| ------- | ------ | ------------------------------- |
+| name    | string | Marketplace 标识符(全字符小写, 横杠`-`连接) |
+| owner   | object | Marketplace 维护者信息               |
+| plugins | array  | 可用 plugin 列表                    |
+

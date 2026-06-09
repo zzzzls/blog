@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-10 00:08:12
+modified: 2026-06-10 00:38:27
 publish: true
 tags: [claude]
 title: plugin
@@ -193,17 +193,55 @@ skill内容, agent内容, hook命令, mongitor命令 以及 MCP 或 LCP Server �
 
 ## 创建第一个插件
 
-1. 创建插件目录
+1. 创建插件目录: `mkdir my-first-plugin`
+2. 创建插件清单: `my-first-plugin/.claude-plugin/plugin.json`
 
-	```bash
-	claude plugin install
+	```
+	{
+	  "name": "my-first-plugin",
+	  "description": "my first plugin",
+	  "version": "1.0.0",
+	  "author": {
+	    "name": "zzzzls"
+	  }
+	}
 	```
 
-2. daima
+3. 添加skill
+	- 在插件中创建一个 skill 目录: `my-first-plugin/skills/hello`
+	- 写入SKILL.md
 
-	```python
-	def test():
-		print("wtf")
-	```
+		```makrdown
+		---
+		name: hello
+		description: 向用户打招呼
+		disable-model-invocation: true
+		argument: [username]
+		---
+		
+		以少女的口吻, 热情地向 "$username" 打招呼
+		```
 
-3. 
+4. 测试你的插件
+	- 运行 claude 以加载插件: `claude --plugin-dir ./my-first-plugin`
+	- 尝试执行 skill: `/my-first-plugin:hello zzzzls`
+
+## 本地测试你的插件
+
+使用 `--plugin-dir / --plugin-url` 在开发期间测试插件
+- 这会直接加载你的插件, 无需安装
+- 若与市场中插件同名, 本地优先
+- 修改插件文件后, 运行 `/reload-plugin` 刷新, 无需重启 claude
+
+```bash
+claude --plugin-dir ./my-first-plugin
+
+# 添加多个插件
+claude --plugin-dir ./plugin-one --plugin-dir ./plugin-two
+
+# 支持zip压缩包
+claude --plugin-dir ./my-first-plugin.zip   
+
+# 加载远程url插件
+
+```

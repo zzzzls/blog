@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-10 01:08:36
+modified: 2026-06-10 01:38:47
 publish: true
 tags: [claude]
 title: plugin
@@ -294,11 +294,104 @@ plugin marketplace 本质是一个插件目录: 它告诉 Claude Code "有哪些
 
 ## marketplace 结构
 
-必需字段:
+| 字段                  | 必填  | 类型     | 说明                                                                                                       |
+| ------------------- | --- | ------ | -------------------------------------------------------------------------------------------------------- |
+| name                | ✔   | string | Marketplace 标识符(全小写, `-`连接)                                                                              |
+| owner               | ✔   | object | Marketplace 维护者信息                                                                                        |
+| plugins             | ✔   | array  | 可用 plugin 列表                                                                                             |
+| description         |     | string | 简短的 marketplace 描述                                                                                       |
+| version             |     | string | Marketplace 清单版本                                                                                         |
+| metadata.pluginRoot |     | string | 前置到相对 plugin 源路径的基目录（例如，`"./plugins"` 让你写 `"source": "formatter"` 而不是 `"source": "./plugins/formatter"`） |
 
-| 字段      | 类型     | 说明                              |
-| ------- | ------ | ------------------------------- |
-| name    | string | Marketplace 标识符(全字符小写, 横杠`-`连接) |
-| owner   | object | Marketplace 维护者信息               |
-| plugins | array  | 可用 plugin 列表                    |
+### plugin 条目
 
+> `plugins` 数组中的每个 plugin 条目描述一个 plugin 及其位置
+
+| 字段             | 必填  | 类型             | 说明                                                                                         |
+| -------------- | --- | -------------- | ------------------------------------------------------------------------------------------ |
+| name           | ✔   | string         | plugin标识符(全小写, `-`连接), 作为安装名:`/plugin install my-plugin@marketplace`                       |
+| source         | ✔   | string\|object | 从哪里获取 plugin, 见 [plugin 源](#plugin%20源)                                                    |
+| displayName    |     | string         | UI中显示的人类可读名称                                                                               |
+| description    |     | string         | 简短的 plugin 描述                                                                              |
+| version        |     | string         | Plugin 版本。如果设置（在此处或在 `plugin.json` 中），plugin 将固定到此字符串，用户仅在其更改时才会收到更新。省略以回退到 git commit SHA |
+| defaultEnabled |     | boolean        | plugin 安装后是否启用 (默认 true)                                                                   |
+
+### plugin 源
+
+> plugin源告诉Claude Code 在 marketplace 中列出的每个 plugin 从哪里获取
+>
+> 一旦 plugin 被克隆或复制到本地, 它就会被复制到本地版本化 plugin 缓存中, 位置为: `~/.claude/plugins/cache`
+
+> [!info] Marketplace源 与 plugin源
+> - marketplace 源: 从哪里获取 martetplace.json 目录自身. 在用户运行 `/plugin marketplace add` 中设置
+> - plugin源: 从哪里获取 marketplace 中列出的单个 plugin. 在 martetplace.json 内每个plugin条目的 source 字段设置
+
+#### 1. 相对路径
+
+对于位于同一存储库中的 plugin, 使用以 `./` 开头的路径
+
+```json
+{
+  "name": "my-plugin",
+  "source": "./plugins/my-plugin"
+}
+```
+
+- 路径相对于 marketplace 根目录解析, 而不是 `.claude-plugin` 目录, 不要使用 `../` 来引用 marketplace 根目录外的路径
+
+#### 2. Github 仓库
+
+```json
+{
+  "name": "github-plugin",
+  "source": {
+    "source": "github",
+    "repo": "owner/plugin-repo"
+  }
+}
+```
+
+可以固定到特定的分支、标签 或 提交
+
+```json
+{
+  "name": "github-plugin",
+  "source": {
+    "source": "github",
+    "repo": "owner/plugin-repo",
+    "ref": "v2.0.0",
+    "sha": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0"
+  }
+}
+```
+
+#### 3. Git 存储库
+
+> 支持 特定的分支、标签 或 提交
+
+```json
+{
+  "name": "git-plugin",
+  "source": {
+    "source": "url",
+    "url": "https://gitlab.com/team/plugin.git 或 git@github.com:owner/repo.git"
+  }
+}
+```
+
+#### 4. Git 子目录
+
+> 支持 特定的分支、标签 或 提交
+
+claude code 会使用稀疏部分克隆来仅获取该子目录, 降低贷款消耗
+
+```json
+{
+  "name": "my-plugin",
+  "source": {
+    "source": "git-subdir",
+    "url": "https://github.com/acme-corp/monorepo.git",
+    "path": "tools/claude-plugin"
+  }
+}
+```

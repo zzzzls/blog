@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-10 01:38:47
+modified: 2026-06-10 01:52:33
 publish: true
 tags: [claude]
 title: plugin
@@ -292,6 +292,24 @@ plugin marketplace 本质是一个插件目录: 它告诉 Claude Code "有哪些
 }
 ```
 
+## 添加 marketplace
+
+1. 从 github 添加
+	- 要求: 仓库包含 `.claude-plugin/marketplace.json`
+	- `/plugin marketplace add owner/repo`
+
+2. 从其他git主机
+	- https: `/plugin marketplace add https://gitlab.com/company/plugins.git`
+	- ssh: `/plugin marketplace add git@gitlab.com:company/plugins.git`
+	- 特定分支/标签: `/plugin marketplace add https://gitlab.com/company/plugins.git#v1.0.0`
+
+3. 从本地路径
+	- `/plugin marketplace add ./my-marketplace`
+	- `/plugin marketplace add ./path/to/marketplace.json`
+
+4. 从远程 url
+	- `/plugin marketplace add https://example.com/marketplace.json`
+
 ## marketplace 结构
 
 | 字段                  | 必填  | 类型     | 说明                                                                                                       |
@@ -394,4 +412,38 @@ claude code 会使用稀疏部分克隆来仅获取该子目录, 降低贷款消
     "path": "tools/claude-plugin"
   }
 }
+```
+
+#### 5. npm 包
+
+```json
+{
+  "name": "my-npm-plugin",
+  "source": {
+    "source": "npm",
+    "package": "@acme/claude-plugin"
+  }
+}
+```
+
+## 托管和分发 marketplace
+
+### 使用 git 托管
+
+Github 提供最简单的分发方法:
+1. 创建存储库
+2. 创建 marketplace 文件: `.claude-plugin/marketplace.json`
+3. 其他用户安装: `/plugin marketplace add owner/repo`
+
+其他 git 服务上托管:
+
+```
+/plugin marketplace add https://gitlab.com/company/plugins.git
+```
+
+### 分发前本地测试
+
+```
+/plugin marketplace add ./my-local-marketplace
+/plugin install test-plugin@my-local-marketplace
 ```

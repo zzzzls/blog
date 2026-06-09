@@ -2,7 +2,7 @@
 category:
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-09 02:07:59
+modified: 2026-06-10 00:08:12
 publish: true
 tags: [claude]
 title: plugin
@@ -21,6 +21,20 @@ Claude Code 的能力通常来自于:
 | settings.json | 默认行为配置                  |
 
 plugin 用于将上述内容打包到一起, 便于安装, 共享, 版本控制和分发
+
+# 独立 .claude 目录
+
+对于个人工作流, 快速实验, 单项目定制等场景, 无需使用 plugin, 可通过项目中创建 .claude 方式来添加自定义 skill, agents 和 hooks, 一个结构如下:
+
+```
+<project>
+.claude
+	skills
+		xxx
+	agents
+		xxx
+	settings.json
+```
 
 # plugin
 
@@ -174,3 +188,22 @@ skill内容, agent内容, hook命令, mongitor命令 以及 MCP 或 LCP Server �
 - `claude plugin update <plugin> [options]`: 更新 plugin
 
 - `claude plugin list [options]`: 列出已安装的 plugin
+
+# 快速开始
+
+## 创建第一个插件
+
+1. 创建插件目录
+
+	```bash
+	claude plugin install
+	```
+
+2. daima
+
+	```python
+	def test():
+		print("wtf")
+	```
+
+3. 

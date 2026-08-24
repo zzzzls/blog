@@ -1,12 +1,12 @@
 ---
 created: 2026-05-25 10:02:21
-modified: 2026-05-25 10:02:26
-title: 未命名
+modified: 2026-08-25 03:20:00
+title: 我的 base CLAUDE.md
 tags:
   - claude
 publish: true
 claude_version: 2.1.133
-category:
+category: prompts
 ---
 
 

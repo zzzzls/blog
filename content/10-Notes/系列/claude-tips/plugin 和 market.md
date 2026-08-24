@@ -1,11 +1,11 @@
 ---
-category:
+category: workflow
 claude_version: 2.1.133
 created: 2026-06-08 09:51:23
-modified: 2026-06-10 02:36:35
+modified: 2026-08-25 03:20:00
 publish: true
 tags: [claude]
-title: plugin & market
+title: plugin 和 market
 ---
 
 Claude Code 的能力通常来自于:
@@ -314,7 +314,7 @@ plugin marketplace 本质是一个插件目录: 它告诉 Claude Code "有哪些
 | 字段             | 必填  | 类型             | 说明                                                                                         |
 | -------------- | --- | -------------- | ------------------------------------------------------------------------------------------ |
 | name           | ✔   | string         | plugin标识符(全小写, `-`连接), 作为安装名:`/plugin install my-plugin@marketplace`                       |
-| source         | ✔   | string\|object | 从哪里获取 plugin, 见 [plugin 源](plugin%20&%20market.md#plugin%20源)                                                    |
+| source         | ✔   | string\|object | 从哪里获取 plugin, 见 [[#plugin 源|plugin 源]]                                                    |
 | displayName    |     | string         | UI中显示的人类可读名称                                                                               |
 | description    |     | string         | 简短的 plugin 描述                                                                              |
 | version        |     | string         | Plugin 版本。如果设置（在此处或在 `plugin.json` 中），plugin 将固定到此字符串，用户仅在其更改时才会收到更新。省略以回退到 git commit SHA |

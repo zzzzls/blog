@@ -1,6 +1,6 @@
 ---
 created: 2026-05-07 00:37:16
-modified: 2026-08-25 03:10:00
+modified: 2026-09-08 02:00:07
 publish: true
 tags: []
 title: index
@@ -37,7 +37,7 @@ zzzzls。
 **教程系列**
 
 - [clash-mihomo](/10-Notes/系列/clash-mihomo/) · [python 工具链](/10-Notes/系列/python工具链/) · [cs144 计网](/10-Notes/系列/cs144计网/)
-- [LangGraph](/10-Notes/系列/LangGraph/) · [AI 工作流（极客时间）](/10-Notes/系列/AI工作流-极客时间/) · [solidworks](/10-Notes/系列/solidworks/) · [rabbitmq](/10-Notes/系列/rabbitmq/)
+- [LangGraph](/10-Notes/系列/LangGraph/) · [AI 工作流（极客时间）](/10-Notes/系列/AI工作流-极客时间/) · [solidworks](/10-Notes/系列/solidworks/) · [rabbitmq](/10-Notes/系列/rabbitmq/) · [tailscale](/10-Notes/系列/tailscale/)
 - [claude-tips](/10-Notes/系列/claude-tips/) · (Claude / Claude Code 使用技巧)
 
 **零散笔记**
